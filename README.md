@@ -33,7 +33,7 @@ A RESTful API for managing products, categories, and suppliers, built with **Lar
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/product-inventory-api.git
+git clone https://github.com/Connecter95/product-inventory-api.git
 cd product-inventory-api
 ```
 

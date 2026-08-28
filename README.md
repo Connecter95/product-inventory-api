@@ -1,66 +1,333 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Product Inventory Management API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A RESTful API for managing products, categories, and suppliers, built with **Laravel 11.x**.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* Product CRUD
+* Category and Supplier relationships
+* Product filtering by:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+  * Category
+  * Price range
+  * Stock level
+* Pagination
+* Laravel Sanctum authentication
+* Form Request validation
+* API Resources
+* Eloquent query scope
+* Product accessor and mutator
+* Product soft deletes
+* Feature tests
+* Database migrations and seeders
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requirements
 
-## Learning Laravel
+* PHP 8.2+
+* Composer
+* MySQL 8+
+* Laravel 11.x
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Installation
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 1. Clone the repository
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+git clone https://github.com/YOUR_USERNAME/product-inventory-api.git
+cd product-inventory-api
+```
 
-## Laravel Sponsors
+### 2. Install dependencies
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+composer install
+```
 
-### Premium Partners
+### 3. Configure environment
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Copy the example environment file:
 
-## Contributing
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Generate the application key:
 
-## Code of Conduct
+```bash
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Configure your MySQL database in `.env`:
 
-## Security Vulnerabilities
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=product_inventory
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Run migrations and seeders
+
+```bash
+php artisan migrate --seed
+```
+
+### 5. Start the development server
+
+```bash
+php artisan serve
+```
+
+The API will be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+## Authentication
+
+The API uses **Laravel Sanctum**.
+
+### Register
+
+```http
+POST /api/register
+```
+
+Example request:
+
+```json
+{
+    "name": "Test User",
+    "email": "test@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+}
+```
+
+### Login
+
+```http
+POST /api/login
+```
+
+Example request:
+
+```json
+{
+    "email": "test@example.com",
+    "password": "password123"
+}
+```
+
+The response contains an authentication token.
+
+For protected endpoints, send:
+
+```http
+Authorization: Bearer YOUR_TOKEN
+Accept: application/json
+```
+
+### Logout
+
+```http
+POST /api/logout
+```
+
+Requires authentication.
+
+## Product API
+
+All Product endpoints require Sanctum authentication.
+
+### List Products
+
+```http
+GET /api/products
+```
+
+### Get Product
+
+```http
+GET /api/products/{id}
+```
+
+### Create Product
+
+```http
+POST /api/products
+```
+
+Example:
+
+```json
+{
+    "category_id": 1,
+    "name": "Wireless Mouse",
+    "description": "2.4GHz wireless mouse",
+    "price": 49.90,
+    "stock": 100,
+    "supplier_ids": [1, 2]
+}
+```
+
+### Update Product
+
+```http
+PUT /api/products/{id}
+```
+
+### Delete Product
+
+```http
+DELETE /api/products/{id}
+```
+
+Products use soft deletes.
+
+## Filtering
+
+Products can be filtered using query parameters.
+
+### Category
+
+```http
+GET /api/products?category_id=1
+```
+
+### Minimum price
+
+```http
+GET /api/products?min_price=100
+```
+
+### Maximum price
+
+```http
+GET /api/products?max_price=500
+```
+
+### Price range
+
+```http
+GET /api/products?min_price=100&max_price=500
+```
+
+### Stock level
+
+```http
+GET /api/products?min_stock=20
+```
+
+### Maximum stock
+
+```http
+GET /api/products?max_stock=100
+```
+
+### Combined filters
+
+```http
+GET /api/products?category_id=1&min_price=100&max_price=500&min_stock=20
+```
+
+## Pagination
+
+Products are paginated with 10 records per page.
+
+```http
+GET /api/products?page=2
+```
+
+## Running Tests
+
+The project uses a separate MySQL testing database.
+
+Configure `.env.testing`:
+
+```env
+APP_ENV=testing
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=product_inventory_testing
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Create the testing database:
+
+```sql
+CREATE DATABASE product_inventory_testing;
+```
+
+Run migrations:
+
+```bash
+php artisan migrate --env=testing
+```
+
+Run all tests:
+
+```bash
+php artisan test
+```
+
+Run Product API tests only:
+
+```bash
+php artisan test --filter=ProductApiTest
+```
+
+## Project Structure
+
+```text
+app/
+├── Http/
+│   ├── Controllers/
+│   │   └── Api/
+│   │       ├── AuthController.php
+│   │       └── ProductController.php
+│   ├── Requests/
+│   │   ├── StoreProductRequest.php
+│   │   └── UpdateProductRequest.php
+│   └── Resources/
+│       └── ProductResource.php
+│
+├── Models/
+│   ├── Category.php
+│   ├── Product.php
+│   ├── Supplier.php
+│   └── User.php
+│
+database/
+├── factories/
+├── migrations/
+└── seeders/
+
+routes/
+└── api.php
+
+tests/
+└── Feature/
+    └── ProductApiTest.php
+```
+
+## Testing
+
+The Product API includes feature tests covering:
+
+* Listing products
+* Creating products
+* Showing a product
+* Updating products
+* Deleting products
+* Product validation
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project was created as part of a technical assessment.

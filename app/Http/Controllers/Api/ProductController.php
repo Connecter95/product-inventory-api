@@ -8,13 +8,16 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        return Product::with(['category', 'suppliers'])
+        $products = Product::with(['category', 'suppliers'])
             ->paginate(10);
+
+        return ProductResource::collection($products);
     }
 
     public function store(StoreProductRequest $request)
@@ -31,15 +34,14 @@ class ProductController extends Controller
             $product->suppliers()->sync($supplierIds);
         }
 
-        return response()->json(
-            $product->load(['category', 'suppliers']),
-            201
+        return new ProductResource(
+            $product->load(['category', 'suppliers'])
         );
     }
 
     public function show(Product $product)
     {
-        return response()->json(
+        return new ProductResource(
             $product->load(['category', 'suppliers'])
         );
     }
@@ -57,7 +59,7 @@ class ProductController extends Controller
             $product->suppliers()->sync($supplierIds);
         }
 
-        return response()->json(
+        return new ProductResource(
             $product->load(['category', 'suppliers'])
         );
     }

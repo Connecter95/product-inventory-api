@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 
 class ProductController extends Controller
 {
@@ -15,11 +17,24 @@ class ProductController extends Controller
             ->paginate(10);
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $product = Product::create($request->all());
+        $data = $request->validated();
 
-        return response()->json($product, 201);
+        $supplierIds = $data['supplier_ids'] ?? [];
+
+        unset($data['supplier_ids']);
+
+        $product = Product::create($data);
+
+        if ($supplierIds) {
+            $product->suppliers()->sync($supplierIds);
+        }
+
+        return response()->json(
+            $product->load(['category', 'suppliers']),
+            201
+        );
     }
 
     public function show(Product $product)
@@ -29,9 +44,18 @@ class ProductController extends Controller
         );
     }
 
-    public function update(Request $request, Product $product)
-    {
-        $product->update($request->all());
+    public function update(UpdateProductRequest $request, Product $product) {
+        $data = $request->validated();
+
+        $supplierIds = $data['supplier_ids'] ?? null;
+
+        unset($data['supplier_ids']);
+
+        $product->update($data);
+
+        if ($supplierIds !== null) {
+            $product->suppliers()->sync($supplierIds);
+        }
 
         return response()->json(
             $product->load(['category', 'suppliers'])

@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Models\Product;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -53,7 +52,8 @@ class ProductController extends Controller
         );
     }
 
-    public function update(UpdateProductRequest $request, Product $product) {
+    public function update(UpdateProductRequest $request, Product $product)
+    {
         $data = $request->validated();
 
         $supplierIds = $data['supplier_ids'] ?? null;

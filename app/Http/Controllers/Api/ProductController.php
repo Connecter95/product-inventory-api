@@ -12,9 +12,16 @@ use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $products = Product::with(['category', 'suppliers'])
+            ->filter($request->only([
+                'category_id',
+                'min_price',
+                'max_price',
+                'min_stock',
+                'max_stock',
+            ]))
             ->paginate(10);
 
         return ProductResource::collection($products);

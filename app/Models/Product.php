@@ -27,4 +27,24 @@ class Product extends Model
     {
         return $this->belongsToMany(Supplier::class);
     }
+
+    public function scopeFilter($query, array $filters)
+    {
+        return $query
+            ->when($filters['category_id'] ?? null, function ($query, $categoryId) {
+                $query->where('category_id', $categoryId);
+            })
+            ->when($filters['min_price'] ?? null, function ($query, $minPrice) {
+                $query->where('price', '>=', $minPrice);
+            })
+            ->when($filters['max_price'] ?? null, function ($query, $maxPrice) {
+                $query->where('price', '<=', $maxPrice);
+            })
+            ->when($filters['min_stock'] ?? null, function ($query, $minStock) {
+                $query->where('stock', '>=', $minStock);
+            })
+            ->when($filters['max_stock'] ?? null, function ($query, $maxStock) {
+                $query->where('stock', '<=', $maxStock);
+            });
+    }
 }

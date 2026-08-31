@@ -1,0 +1,159 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Product Inventory API",
+        "description": "REST API for Product Inventory Management System",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Local API Server"
+        }
+    ],
+    "paths": {
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get all products",
+                "operationId": "d97d1c3727cbac49708b85f7d11f7d58",
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Filter products by category ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "min_price",
+                        "in": "query",
+                        "description": "Minimum product price",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "max_price",
+                        "in": "query",
+                        "description": "Maximum product price",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "min_stock",
+                        "in": "query",
+                        "description": "Minimum stock quantity",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "max_stock",
+                        "in": "query",
+                        "description": "Maximum stock quantity",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Products retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 11,
+                                            "name": "Iste Aut Eum",
+                                            "description": "Commodi facilis quis dignissimos voluptatum.",
+                                            "price": "906.57",
+                                            "stock": 336,
+                                            "category": {
+                                                "id": 1,
+                                                "name": "ea"
+                                            },
+                                            "suppliers": [
+                                                {
+                                                    "id": 2,
+                                                    "name": "Runolfsson LLC",
+                                                    "email": "lesch.carmel@example.net",
+                                                    "phone": "+1-617-917-8684"
+                                                }
+                                            ],
+                                            "created_at": "2026-08-28T14:04:04.000000Z",
+                                            "updated_at": "2026-08-28T14:04:04.000000Z"
+                                        }
+                                    ],
+                                    "links": {
+                                        "first": "http://127.0.0.1:8000/api/products?page=1",
+                                        "last": "http://127.0.0.1:8000/api/products?page=1",
+                                        "prev": null,
+                                        "next": null
+                                    },
+                                    "meta": {
+                                        "current_page": 1,
+                                        "from": 1,
+                                        "last_page": 1,
+                                        "per_page": 10,
+                                        "to": 1,
+                                        "total": 1
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "Sanctum Token",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Products",
+            "description": "Products"
+        }
+    ]
+}
